@@ -27,7 +27,7 @@ CREATE TABLE styles (
 	style_id serial PRIMARY KEY,
 	product_id INT NOT NULL,
 	name VARCHAR ( 255 ) NOT NULL,
-	sale_price TEXT NOT NULL,
+	sale_price INT,
   original_price INT NOT NULL,
   default_style BOOLEAN NOT NULL
 );

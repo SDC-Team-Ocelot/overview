@@ -32,17 +32,19 @@ const querySingleProduct = async (id, callback) => {
 
 const queryStyles = async (id, callback) => {
   try {
-    const result = await pool.query(`SELECT s.product_id, s.style_id, s.name, s.sale_price, s.original_price, s."default?", \
+    const result = await pool.query(`SELECT s.style_id, s.name, \
+    to_char(s.original_price,'FM999D00') as original_price, \
+    s.sale_price, s."default?", \
     CASE WHEN count(p) = 0 THEN ARRAY[]::json[] ELSE array_agg(p.photos) END AS photos, \
-    json_object_agg(sku.sku_id, sku.sk) as skus \
+    CASE WHEN count(sku) = 0 THEN '{}'::json ELSE json_object_agg(sku.sku_id, sku.sk) FILTER (WHERE sku.sku_id IS NOT NULL) END AS skus \
     FROM styles s \
       LEFT JOIN \
       ( \
-        SELECT photos.style_id, json_build_object('style_id', photos.style_id, 'url', photos.url, 'thumbnail_url', photos.thumbnail_url) as photos \
+        SELECT photos.style_id, json_build_object('url', photos.url, 'thumbnail_url', photos.thumbnail_url) as photos \
         FROM photos \
       ) p \
         ON s.style_id = p.style_id \
-        INNER JOIN \
+        LEFT JOIN \
         ( \
           SELECT skus.style_id, skus.sku_id, json_build_object('size', size, 'quantity', quantity) as sk \
           FROM skus \
@@ -56,12 +58,21 @@ const queryStyles = async (id, callback) => {
       results: result.rows,
     }
 
-    if (result.rows.length === 0) {
-      const styles = await pool.query(`SELECT s.product_id, s.style_id, s.name, s.sale_price, s.original_price, s."default?", '[]'::json as photos, '{}'::json as skus \
-      FROM styles s \
-      WHERE s.product_id = '${id}'`)
-      formatResult.results = styles.rows
-    }
+    // if (result.rows.length === 0) {
+    //   const styles = await pool.query(`SELECT s.product_id, s.style_id, s.name, s.sale_price, s.original_price, s."default?", \
+    //   CASE WHEN count(p) = 0 THEN ARRAY[]::json[] ELSE array_agg(p.photos) END AS photos, \
+    //   '{}'::json as skus \
+    //   FROM styles s \
+    //   LEFT JOIN \
+    //   ( \
+    //     SELECT photos.style_id, json_build_object('url', photos.url, 'thumbnail_url', photos.thumbnail_url) as photos \
+    //     FROM photos \
+    //   ) p \
+    //     ON s.style_id = p.style_id \
+    //   WHERE s.product_id = '${id}' \
+    //   GROUP BY s.style_id`)
+    //   formatResult.results = styles.rows
+    // }
 
     callback(null, formatResult);
   } catch (error) {
