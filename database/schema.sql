@@ -78,3 +78,5 @@ CREATE INDEX product_id ON product(product_id);
 CREATE INDEX style_id on styles(style_id);
 CREATE INDEX style_product_id on styles(product_id);
 CREATE INDEX sku_style_id on skus(style_id);
+
+ANALYZE;
