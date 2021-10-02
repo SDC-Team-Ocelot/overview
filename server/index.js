@@ -3,7 +3,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 const path = require('path');
 const router = require('./routes/routes.js')
-require('newrelic')
+// require('newrelic')
 
 const app = express();
 

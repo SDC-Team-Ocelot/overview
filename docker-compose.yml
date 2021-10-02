@@ -4,7 +4,7 @@ services:
     container_name: sdc-overview
     build: .
     ports:
-      - '80:3001'
+      - '3004:3001'
     depends_on:
       - postgres
     environment:
@@ -12,11 +12,13 @@ services:
   db:
     image: postgres
     ports:
-      - "5432:5432"
+      - "1234:5432"
     environment:
       POSTGRES_USER: andrewhang
       POSTGRES_PASSWORD: password
       POSTGRES_DB: overview
+    volumes:
+      - ./database/sdc-overview.sql:/docker-entrypoint-initdb.d/sdc-overview.sql
 
 
 
