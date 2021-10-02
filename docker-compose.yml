@@ -1,24 +1,24 @@
-version: "20.10.8"
-services:
-  app:
-    container_name: sdc-overview
-    build: .
-    ports:
-      - '3004:3001'
-    depends_on:
-      - postgres
-    environment:
-      DATABASE_URL: postgres://andrewhang@password/overview
-  db:
-    image: postgres
-    ports:
-      - "1234:5432"
-    environment:
-      POSTGRES_USER: andrewhang
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: overview
-    volumes:
-      - ./database/sdc-overview.sql:/docker-entrypoint-initdb.d/sdc-overview.sql
+# version: "20.10.8"
+# services:
+#   app:
+#     container_name: sdc-overview
+#     build: .
+#     ports:
+#       - '3004:3001'
+#     depends_on:
+#       - db
+#     environment:
+#       DATABASE_URL: postgres://andrewhang@password/overview
+#   db:
+#     image: postgres
+#     ports:
+#       - "1234:5432"
+#     environment:
+#       POSTGRES_USER: andrewhang
+#       POSTGRES_PASSWORD: password
+#       POSTGRES_DB: overview
+#     volumes:
+#       - ./database/sdc-overview.sql:/docker-entrypoint-initdb.d/sdc-overview.sql
 
 
 

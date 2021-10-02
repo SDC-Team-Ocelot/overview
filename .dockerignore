@@ -1,3 +1,4 @@
-node_modules
+node_modules/
 csv/
 newrelic.js
+database/sdc-overview.sql
