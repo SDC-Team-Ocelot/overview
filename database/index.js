@@ -3,9 +3,9 @@ require('dotenv').config();
 
 
 const pool = new Pool({
-  user: 'postgres', // <-- for docker user for local is andrewhang
+  user: process.env.DB_USER, // <-- for docker user for local is andrewhang
   password: process.env.DB_PASSWORD,
-  database: 'postgres', // <-- for docker db for local is overview
+  database: 'overview', // <-- for docker db for local is overview
   host: 'localhost',
   port: 5432
 });
