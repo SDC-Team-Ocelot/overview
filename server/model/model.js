@@ -57,13 +57,17 @@ const queryStyles = async (id, callback) => {
     ORDER BY s.style_id ASC`)
 
     const styles = result.rows
-    styles.forEach((style, idx) => {
+    // await styles.forEach((style, idx) => {
+    //   style.skus = skus.rows[idx].skus
+    // })
+
+    await Promise.all(styles.map((style,idx) => {
       style.skus = skus.rows[idx].skus
-    })
+    }));
 
     const formatResult = {
       product_id: id,
-      results: result.rows,
+      results: styles,
     }
 
     callback(null, formatResult);
