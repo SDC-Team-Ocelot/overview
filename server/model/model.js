@@ -1,17 +1,17 @@
 const pool = require('../../database/index.js');
 
-const queryProducts = async (requestQuery, callback) => {
+const queryProducts = async (requestQuery) => {
   try {
     requestQuery.page = (requestQuery.page - 1) * requestQuery.count;
     const result = await pool.query(`SELECT product.product_id as id, name, slogan, description, category, default_price FROM product LIMIT ${requestQuery.count || 5} OFFSET ${requestQuery.page || 0}`)
 
-    callback(null, result.rows);
+    return result.rows;
   } catch (error) {
-    callback(error)
+    return error
   }
 }
 
-const querySingleProduct = async (id, callback) => {
+const querySingleProduct = async (id) => {
   try {
     const product = await pool.query(
     `SELECT product.product_id as id, product.name, \
@@ -24,13 +24,13 @@ const querySingleProduct = async (id, callback) => {
               GROUP BY product.product_id`
     )
 
-    callback(null, product.rows);
+    return product.rows
   } catch (error) {
-    callback(error)
+    return error
   }
 }
 
-const queryStyles = async (id, callback) => {
+const queryStyles = async (id) => {
   try {
     const result = await pool.query(`SELECT s.style_id, s.name,to_char(s.original_price,'FM999D00') as original_price, s.sale_price, s."default?", \
     CASE WHEN count(p) = 0 THEN ARRAY[]::json[] ELSE ARRAY_AGG(p.photos) END AS photos \
@@ -70,19 +70,18 @@ const queryStyles = async (id, callback) => {
       results: styles,
     }
 
-    callback(null, formatResult);
+    return formatResult;
   } catch (error) {
-    callback(error)
+    return error;
   }
 }
 
-const queryRelatedProducts = async (id, callback) => {
+const queryRelatedProducts = async (id) => {
   try {
-    const result = await pool.query(`SELECT related_product_id FROM related_items WHERE product_id = ${id}`)
-    const formatResult = result.rows.map(result => result.related_product_id)
-    callback(null, formatResult);
+    const result = await pool.query(`SELECT ARRAY_AGG(related_product_id) related FROM related_items WHERE product_id = ${id}`)
+    return result.rows[0].related
   } catch (error) {
-    callback(error)
+    return error
   }
 }
 

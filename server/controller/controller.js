@@ -1,47 +1,40 @@
 const {queryProducts, querySingleProduct, queryRelatedProducts, queryStyles} = require('../model/model.js')
 
-const getProducts = (req, res) => {
-  queryProducts(req.query, (err, result) => {
-    if (err) {
-      console.error(err.message);
-      res.sendStatus(418)
-    } else {
-      res.send(result)
-    }
-  })
+const getProducts = async (req, res) => {
+  try {
+    const result = await queryProducts(req.query)
+    res.status(200).send(result)
+  } catch (error) {
+    res.status(418).send(err)
+  }
 }
 
-const getProduct = (req, res) => {
-  querySingleProduct(req.params.id, (err, result) => {
-    if (err) {
-      console.error(err.message);
-      res.sendStatus(418)
-    } else {
-      res.send(result)
-    }
-  })
+const getProduct = async (req, res) => {
+  try {
+    const result = await querySingleProduct(req.params.id)
+    res.status(200).send(result[0])
+  } catch (error) {
+    res.status(418).send(error)
+  }
 }
 
-const getRelatedProducts = (req, res) => {
-  queryRelatedProducts(req.params.id, (err, result) => {
-    if (err) {
-      console.error(err.message);
-      res.sendStatus(418)
-    } else {
-      res.send(result)
-    }
-  })
+const getRelatedProducts = async (req, res) => {
+  try {
+    const result = await queryRelatedProducts(req.params.id);
+    res.status(200).send(result)
+  } catch (error) {
+    res.status(418).send(error)
+  }
+
 }
 
-const getStyles = (req, res) => {
-  queryStyles(req.params.id, (err, result) => {
-    if (err) {
-      console.error(err.message);
-      res.sendStatus(418)
-    } else {
-      res.send(result)
-    }
-  })
+const getStyles = async (req, res) => {
+  try {
+    const result = await queryStyles(req.params.id)
+    res.status(200).send(result)
+  } catch (error) {
+    res.status(418).send(error)
+  }
 }
 
 module.exports = {getProducts, getProduct, getRelatedProducts, getStyles}

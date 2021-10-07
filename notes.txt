@@ -1,0 +1,54 @@
+#! /bin/sh
+sudo apt-get update
+
+sudo apt-get install \
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release -y
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+echo \
+"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+
+sudo groupadd docker
+
+sudo usermod -aG docker $USER
+
+newgrp docker
+
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3001
+
+----
+
+
+ssh -i sdcoverview.cer  ubuntu@18.117.75.187
+
+
+docker pull [repo/name]
+docker  run -itp 3001:3001 [repo/name]
+su postgres -
+pg_ctl start -D /var/lib/postgresql/data
+gunzip < sdc-product.gz | psql -U postgres postgres
+
+-- Postgres commands --
+
+ALTER USER postgres WITH PASSWORD 'password';
+CREATE INDEX product_id_related on related_items(product_id);
+CREATE INDEX product_id_related_2 on related_items(related_product_id);
+ANALYZE;
+
+npm run start
+
+--- for vim
+https://dev.to/greenteabiscuit/installing-vim-in-a-docker-container-15i6
+
+https://stackoverflow.com/questions/66350893/why-macosx86-can-run-docker-arm-container-arm64v8-alpine
+
