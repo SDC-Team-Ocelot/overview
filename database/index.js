@@ -6,7 +6,7 @@ const pool = new Pool({
   user: process.env.DB_USER, // <-- for docker user for local is andrewhang
   password: process.env.DB_PASSWORD,
   database: process.env.DB, // <-- for docker db for local is overview
-  host: '3.19.14.0',
+  host: 'localhost',
   port: 5432
 });
 

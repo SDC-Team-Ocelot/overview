@@ -37,7 +37,7 @@ docker  run -itp 3001:3001 [repo/name]
 su postgres -
 pg_ctl start -D /var/lib/postgresql/data
 gunzip < sdc-product.gz | psql -U postgres postgres
-
+ docker exec -it <container name> /bin/bash
 -- Postgres commands --
 
 ALTER USER postgres WITH PASSWORD 'password';
@@ -52,3 +52,6 @@ https://dev.to/greenteabiscuit/installing-vim-in-a-docker-container-15i6
 
 https://stackoverflow.com/questions/66350893/why-macosx86-can-run-docker-arm-container-arm64v8-alpine
 
+
+ --NGINX
+sudo systemctl reload nginx

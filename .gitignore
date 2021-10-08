@@ -113,3 +113,4 @@ database/sdc-product.gz
 database/.DS_Store
 help.txt
 server/server.js
+database/.DS_Store
